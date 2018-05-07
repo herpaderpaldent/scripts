@@ -14,22 +14,23 @@ cd /root/
 # Make Ubuntu not ask any questions
 export DEBIAN_FRONTEND=noninteractive
 
-echo " * Ensuring we have all the prerequisites for the SeAT tool installer"
-apt install apt-transport-https lsb-release ca-certificates curl dirmngr -y
+echo " * Ensuring ca-certificates & curl is installed and up to date"
+apt-get install ca-certificates curl -y
 
-echo " * Adding packages.sury.org repostitory & GPG signing key"
-sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo " * Adding dotdeb repostitory"
+echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 
-echo " * Adding MariaDB repostitory & GPG signing key"
-sh -c 'echo "deb http://downloads.mariadb.com/MariaDB/mariadb-10.2/repo/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/mariadb.list'
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xcbcb082a1bb943db 0xF1656F24C74CD1D8
+echo " * Installing dotdeb GPG signing key"
+wget https://www.dotdeb.org/dotdeb.gpg
+apt-key add dotdeb.gpg
+rm -f dotdeb.gpg
 
 echo " * Updating repolist"
 apt update
 
 echo " * Installing installer dependencies"
-apt install php7.1-cli php7.1-mysql unzip git -y
+apt install php-cli php-mysql unzip git -y
 
 echo " * Installing SeAT tool"
 curl -fsSL https://git.io/vXb0u -o /usr/local/bin/seat

@@ -12,7 +12,4 @@ RUN touch crontab.tmp \
     && crontab crontab.tmp \
     && rm -rf crontab.tmp
 
-COPY startup.sh /root/startup.sh
-RUN chmod +x /root/startup.sh
-
-ENTRYPOINT ["/bin/sh", "/root/startup.sh"]
+CMD ["/usr/sbin/crond", "-f", "-d", "7"]
